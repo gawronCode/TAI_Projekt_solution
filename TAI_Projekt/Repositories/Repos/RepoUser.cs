@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using TAI_Projekt.Data;
 using TAI_Projekt.Models.DbModels;
 using TAI_Projekt.Repositories.IRepos;
 
@@ -9,34 +11,48 @@ namespace TAI_Projekt.Repositories.Repos
 {
     public class RepoUser : IRepoUser
     {
-        public Task<bool> Create(User entity)
+
+        private readonly ApplicationDbContext _context;
+
+        public RepoUser(ApplicationDbContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
         }
 
-        public Task<bool> Delete(User entity)
+        public async Task<bool> CreateAsync(User entity)
         {
-            throw new NotImplementedException();
+            await _context.Users.AddAsync(entity);
+            return await SaveAsync();
         }
 
-        public Task<ICollection<User>> GetAll()
+        public async Task<bool> DeleteAsync(User entity)
         {
-            throw new NotImplementedException();
+            _context.Users.Remove(entity);
+            return await SaveAsync();
         }
 
-        public Task<User> GetById(int id)
+        public async Task<ICollection<User>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            var users = await _context.Users.ToListAsync();
+            return users;
         }
 
-        public Task<bool> Save()
+        public async Task<User> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var user = await _context.Users.FirstOrDefaultAsync(q => q.Id == id);
+            return user;
         }
 
-        public Task<bool> Update(User entity)
+        public async Task<bool> SaveAsync()
         {
-            throw new NotImplementedException();
+            var changes = await _context.SaveChangesAsync();
+            return changes > 0;
+        }
+
+        public async Task<bool> UpdateAsync(User entity)
+        {
+            _context.Users.Update(entity);
+            return await SaveAsync();
         }
     }
 }

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using TAI_Projekt.Data;
 using TAI_Projekt.Models.DbModels;
 using TAI_Projekt.Repositories.IRepos;
 
@@ -9,34 +11,48 @@ namespace TAI_Projekt.Repositories.Repos
 {
     public class RepoUserRole : IRepoUserRole
     {
-        public Task<bool> Create(UserRole entity)
+
+        private readonly ApplicationDbContext _context;
+
+        public RepoUserRole(ApplicationDbContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
         }
 
-        public Task<bool> Delete(UserRole entity)
+        public async Task<bool> CreateAsync(UserRole entity)
         {
-            throw new NotImplementedException();
+            await _context.UserRoles.AddAsync(entity);
+            return await SaveAsync();
         }
 
-        public Task<ICollection<UserRole>> GetAll()
+        public async Task<bool> DeleteAsync(UserRole entity)
         {
-            throw new NotImplementedException();
+            _context.UserRoles.Remove(entity);
+            return await SaveAsync();
         }
 
-        public Task<UserRole> GetById(int id)
+        public async Task<ICollection<UserRole>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            var userRoles = await _context.UserRoles.ToListAsync();
+            return userRoles;
         }
 
-        public Task<bool> Save()
+        public async Task<UserRole> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var userRole = await _context.UserRoles.FirstOrDefaultAsync(q => q.Id == id);
+            return userRole;
         }
 
-        public Task<bool> Update(UserRole entity)
+        public async Task<bool> SaveAsync()
         {
-            throw new NotImplementedException();
+            var changes = await _context.SaveChangesAsync();
+            return changes > 0;
+        }
+
+        public async Task<bool> UpdateAsync(UserRole entity)
+        {
+            _context.UserRoles.Update(entity);
+            return await SaveAsync();
         }
     }
 }

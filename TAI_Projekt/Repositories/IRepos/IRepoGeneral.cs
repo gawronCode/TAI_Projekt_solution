@@ -7,11 +7,11 @@ namespace TAI_Projekt.Repositories.IRepos
 {
     public interface IRepoGeneral<T> where T : class
     {
-        Task<ICollection<T>> GetAll();
-        Task<T> GetById(int id);
-        Task<bool> Create(T entity);
-        Task<bool> Update(T entity);
-        Task<bool> Delete(T entity);
-        Task<bool> Save();
+        Task<ICollection<T>> GetAllAsync();
+        Task<T> GetByIdAsync(int id);
+        Task<bool> CreateAsync(T entity);
+        Task<bool> UpdateAsync(T entity);
+        Task<bool> DeleteAsync(T entity);
+        Task<bool> SaveAsync();
     }
 }

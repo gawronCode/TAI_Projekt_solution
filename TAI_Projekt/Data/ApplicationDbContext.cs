@@ -14,5 +14,12 @@ namespace TAI_Projekt.Data
         public DbSet<Role> Roles { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<UserRole>().HasIndex(entity => new {entity.UserId}).IsUnique();
+
+            base.OnModelCreating(modelBuilder);
+        }
+
     }
 }

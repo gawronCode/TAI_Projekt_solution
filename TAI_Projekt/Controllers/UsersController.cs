@@ -53,6 +53,20 @@ namespace TAI_Projekt.Controllers
             return Ok();
         }
 
+        [HttpPut("{id}")]
+        public async Task<ActionResult<User>> Update(User user, int id)
+        {
+            var userToUpdate = await _repoUser.GetByIdAsync(id);
+            userToUpdate.Age = user.Age;
+            userToUpdate.Email = user.Email;
+            userToUpdate.Name = user.Name;
+            userToUpdate.SecondName = user.SecondName;
+            userToUpdate.Phone = user.Phone;
+            await _repoUser.UpdateAsync(userToUpdate);
+            return Ok(userToUpdate);
+        }
+
+
 
     }
 }

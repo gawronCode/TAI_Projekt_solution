@@ -30,11 +30,26 @@ namespace TAI_Projekt.Controllers
             return Ok(users);
         }
 
+        [HttpGet("{id}")]
+        public async Task<ActionResult<User>> GetById(int id)
+        {
+            var user = await _repoUser.GetByIdAsync(id);
+            return Ok(user);
+        }
+
 
         [HttpPost]
         public async Task<ActionResult> Add(User user)
         {
             await _repoUser.CreateAsync(user);
+            return Ok();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            var user = await _repoUser.GetByIdAsync(id);
+            await _repoUser.DeleteAsync(user);
             return Ok();
         }
 

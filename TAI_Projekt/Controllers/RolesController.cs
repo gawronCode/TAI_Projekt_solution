@@ -5,12 +5,13 @@ namespace TAI_Projekt.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class UsersController : ControllerBase
+    public class RolesController : ControllerBase
     {
         [HttpGet]
         public string Get()
         {
-            return "It's working - USERS";
+            return "It's working - ROLE";
         }
     }
 }
+

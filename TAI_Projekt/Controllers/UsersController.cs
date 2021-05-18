@@ -42,7 +42,7 @@ namespace TAI_Projekt.Controllers
                     Phone = user.Phone,
                     RoleId = user.RoleId,
                     RoleName = user.RoleId == null ? null : (await _repoRole.GetByIdAsync((int)user.RoleId)).Name,
-
+                    RoleAssignDate = user.RoleAssignDate
                 });
             }
 
@@ -66,6 +66,7 @@ namespace TAI_Projekt.Controllers
                 Phone = user.Phone,
                 RoleId = user.RoleId,
                 RoleName = user.RoleId == null ? null : (await _repoRole.GetByIdAsync((int) user.RoleId)).Name,
+                RoleAssignDate = user.RoleAssignDate
             };
 
             return Ok(dtoUser);
@@ -83,7 +84,8 @@ namespace TAI_Projekt.Controllers
                 Name = dtoUser.Name,
                 Phone = dtoUser.Phone,
                 SecondName = dtoUser.SecondName,
-                RoleId = dtoUser.RoleId
+                RoleId = dtoUser.RoleId,
+                RoleAssignDate = dtoUser.RoleId == null ? null : DateTime.Now
             };
             
             await _repoUser.CreateAsync(user);
@@ -105,17 +107,35 @@ namespace TAI_Projekt.Controllers
             var user = await _repoUser.GetByIdAsync(id);
             if (user == null) return NotFound("No data in database");
 
-            user.Name = dtoUser.Name ?? user.Name;
-            user.SecondName = dtoUser.SecondName ?? user.Name;
+            user.Name ??= dtoUser.Name;
+            user.SecondName ??= dtoUser.SecondName;
             user.Age = dtoUser.Age ?? user.Age;
-            user.Email = dtoUser.Email ?? user.Email;
-            user.Phone = dtoUser.Phone ?? user.Phone;
-            user.RoleId = dtoUser.RoleId ?? user.RoleId;
+            user.Email ??= dtoUser.Email;
+            user.Phone ??= dtoUser.Phone;
 
             await _repoUser.UpdateAsync(user);
             return Ok();
         }
 
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateRole(DtoUser dtoUser, int id)
+        {
+            var user = await _repoUser.GetByIdAsync(id);
+            if (user == null) return NotFound("No data in database");
+
+            if (dtoUser.RoleId != null)
+            {
+                user.RoleAssignDate = dtoUser.RoleId != user.RoleId ? DateTime.Now : user.RoleAssignDate;
+            }
+            else
+            {
+                user.RoleAssignDate = null;
+            }
+            user.RoleId = dtoUser.RoleId;
+
+            await _repoUser.UpdateAsync(user);
+            return Ok();
+        }
 
 
     }

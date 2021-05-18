@@ -15,6 +15,6 @@ namespace TAI_Projekt.Models.DtoModels
         public string Email { get; set; }
         public int? RoleId { get; set; }
         public string RoleName { get; set; }
-
+        public DateTime? RoleAssignDate { get; set; }
     }
 }

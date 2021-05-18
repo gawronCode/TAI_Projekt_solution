@@ -22,7 +22,7 @@ namespace TAI_Projekt.Models.DbModels
         [Required]
         public string Email { get; set; }
         public DateTime? CreationDate { get; set; }
-        public int RoleId { get; set; }
+        public int? RoleId { get; set; }
         public Role Role { get; set; }
         public DateTime? RoleAssignDate { get; set; }
 

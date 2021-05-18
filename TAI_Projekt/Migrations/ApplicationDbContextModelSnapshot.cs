@@ -31,9 +31,12 @@ namespace TAI_Projekt.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Roles");
                 });
@@ -66,7 +69,7 @@ namespace TAI_Projekt.Migrations
                     b.Property<DateTime?>("RoleAssignDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("RoleId")
+                    b.Property<int?>("RoleId")
                         .HasColumnType("int");
 
                     b.Property<string>("SecondName")
@@ -84,9 +87,7 @@ namespace TAI_Projekt.Migrations
                 {
                     b.HasOne("TAI_Projekt.Models.DbModels.Role", "Role")
                         .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RoleId");
 
                     b.Navigation("Role");
                 });

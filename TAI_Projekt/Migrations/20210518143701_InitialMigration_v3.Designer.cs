@@ -10,8 +10,8 @@ using TAI_Projekt.Data;
 namespace TAI_Projekt.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210518125143_InitialMigration_v2")]
-    partial class InitialMigration_v2
+    [Migration("20210518143701_InitialMigration_v3")]
+    partial class InitialMigration_v3
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -33,9 +33,12 @@ namespace TAI_Projekt.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Roles");
                 });
@@ -68,7 +71,7 @@ namespace TAI_Projekt.Migrations
                     b.Property<DateTime?>("RoleAssignDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("RoleId")
+                    b.Property<int?>("RoleId")
                         .HasColumnType("int");
 
                     b.Property<string>("SecondName")
@@ -86,9 +89,7 @@ namespace TAI_Projekt.Migrations
                 {
                     b.HasOne("TAI_Projekt.Models.DbModels.Role", "Role")
                         .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RoleId");
 
                     b.Navigation("Role");
                 });

@@ -24,25 +24,67 @@ namespace TAI_Projekt.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetAll()
+        public async Task<ActionResult<IEnumerable<DtoUser>>> GetAll()
         {
             var users = await _repoUser.GetAllAsync();
-            return Ok(users);
+            if (users.Count == 0) return NotFound("No data in database");
+
+            var dtoUsers = new List<DtoUser>();
+            foreach (var user in users)
+            {
+                dtoUsers.Add(new DtoUser
+                {
+                    Id = user.Id,
+                    Name = user.Name,
+                    SecondName = user.SecondName,
+                    Age = user.Age,
+                    Email = user.Email,
+                    Phone = user.Phone,
+                    RoleId = user.RoleId,
+                    RoleName = user.RoleId == null ? null : (await _repoRole.GetByIdAsync((int)user.RoleId)).Name,
+
+                });
+            }
+
+            return Ok(dtoUsers);
         }
 
         
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetById(int id)
+        public async Task<ActionResult<DtoUser>> GetById(int id)
         {
             var user = await _repoUser.GetByIdAsync(id);
-            return Ok(user);
+            if (user == null) return NotFound("No data in database");
+
+            var dtoUser = new DtoUser
+            {
+                Id = user.Id,
+                Name = user.Name,
+                SecondName = user.SecondName,
+                Age = user.Age,
+                Email = user.Email,
+                Phone = user.Phone,
+                RoleId = user.RoleId,
+                RoleName = user.RoleId == null ? null : (await _repoRole.GetByIdAsync((int) user.RoleId)).Name,
+            };
+
+            return Ok(dtoUser);
         }
 
 
         [HttpPost]
         public async Task<ActionResult> Add(DtoUser dtoUser)
         {
-
+            var user = new User
+            {
+                Age = dtoUser.Age ?? default,
+                CreationDate = DateTime.Now,
+                Email = dtoUser.Email,
+                Name = dtoUser.Name,
+                Phone = dtoUser.Phone,
+                SecondName = dtoUser.SecondName,
+                RoleId = dtoUser.RoleId
+            };
             
             await _repoUser.CreateAsync(user);
             return Ok();
@@ -52,21 +94,26 @@ namespace TAI_Projekt.Controllers
         public async Task<ActionResult> Delete(int id)
         {
             var user = await _repoUser.GetByIdAsync(id);
+            if (user == null) return NotFound("No data in database");
             await _repoUser.DeleteAsync(user);
             return Ok();
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<User>> Update(User user, int id)
+        public async Task<ActionResult> Update(DtoUser dtoUser, int id)
         {
-            var userToUpdate = await _repoUser.GetByIdAsync(id);
-            userToUpdate.Age = user.Age;
-            userToUpdate.Email = user.Email;
-            userToUpdate.Name = user.Name;
-            userToUpdate.SecondName = user.SecondName;
-            userToUpdate.Phone = user.Phone;
-            await _repoUser.UpdateAsync(userToUpdate);
-            return Ok(userToUpdate);
+            var user = await _repoUser.GetByIdAsync(id);
+            if (user == null) return NotFound("No data in database");
+
+            user.Name = dtoUser.Name ?? user.Name;
+            user.SecondName = dtoUser.SecondName ?? user.Name;
+            user.Age = dtoUser.Age ?? user.Age;
+            user.Email = dtoUser.Email ?? user.Email;
+            user.Phone = dtoUser.Phone ?? user.Phone;
+            user.RoleId = dtoUser.RoleId ?? user.RoleId;
+
+            await _repoUser.UpdateAsync(user);
+            return Ok();
         }
 
 

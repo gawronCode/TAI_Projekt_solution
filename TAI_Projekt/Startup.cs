@@ -30,7 +30,7 @@ namespace TAI_Projekt
 
             services.AddScoped<IRepoUser, RepoUser>();
             services.AddScoped<IRepoRole, RepoRole>();
-            services.AddScoped<IRepoUserRole, RepoUserRole>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -13,13 +13,11 @@ namespace TAI_Projekt.Controllers
     {
         private readonly IRepoUser _repoUser;
         private readonly IRepoRole _repoRole;
-        private readonly IRepoUserRole _repoUserRole;
 
-        public RolesController(IRepoUser repoUser, IRepoRole repoRole, IRepoUserRole repoUserRole)
+        public RolesController(IRepoUser repoUser, IRepoRole repoRole)
         {
             _repoUser = repoUser;
             _repoRole = repoRole;
-            _repoUserRole = repoUserRole;
         }
 
         [HttpGet]

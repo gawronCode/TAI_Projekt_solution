@@ -1,8 +1,10 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using TAI_Projekt.Models.DbModels;
+using TAI_Projekt.Models.DtoModels;
 using TAI_Projekt.Repositories.IRepos;
 
 
@@ -14,13 +16,11 @@ namespace TAI_Projekt.Controllers
     {
         private readonly IRepoUser _repoUser;
         private readonly IRepoRole _repoRole;
-        private readonly IRepoUserRole _repoUserRole;
 
-        public UsersController(IRepoUser repoUser, IRepoRole repoRole, IRepoUserRole repoUserRole)
+        public UsersController(IRepoUser repoUser, IRepoRole repoRole)
         {
             _repoUser = repoUser;
             _repoRole = repoRole;
-            _repoUserRole = repoUserRole;
         }
 
         [HttpGet]
@@ -30,6 +30,7 @@ namespace TAI_Projekt.Controllers
             return Ok(users);
         }
 
+        
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetById(int id)
         {
@@ -39,8 +40,10 @@ namespace TAI_Projekt.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult> Add(User user)
+        public async Task<ActionResult> Add(DtoUser dtoUser)
         {
+
+            
             await _repoUser.CreateAsync(user);
             return Ok();
         }

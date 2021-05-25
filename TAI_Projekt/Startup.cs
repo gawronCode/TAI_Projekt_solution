@@ -24,6 +24,16 @@ namespace TAI_Projekt
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            // pozwala na wykorzystywanie api przez angulara spod podanego adresu
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder.WithOrigins("http://localhost:4200").AllowAnyMethod();
+                });
+            });
+
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DbConnectionString")));
             services.AddControllers();
@@ -46,9 +56,7 @@ namespace TAI_Projekt
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllers();
             });
         }
     }

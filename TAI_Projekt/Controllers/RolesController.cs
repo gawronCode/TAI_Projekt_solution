@@ -34,7 +34,7 @@ namespace TAI_Projekt.Controllers
 
         }
 
-        [HttpGet("{id}", Name = "GetByID")]
+        [HttpGet("{id}", Name = "GetRoleByID")]
         public async Task<ActionResult<DtoRole>> GetById(int id)
         {
             var role = await _repoRole.GetByIdAsync(id);
@@ -58,7 +58,7 @@ namespace TAI_Projekt.Controllers
             };
 
             await _repoRole.CreateAsync(role);
-            return CreatedAtRoute(nameof(GetById), new {role.Id}, role);
+            return CreatedAtRoute("GetRoleByID", new {role.Id}, role);
         }
 
         [HttpDelete("{id}")]

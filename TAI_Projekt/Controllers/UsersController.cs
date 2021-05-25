@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using TAI_Projekt.Models.DbModels;
@@ -41,7 +42,7 @@ namespace TAI_Projekt.Controllers
                     Email = user.Email,
                     Phone = user.Phone,
                     RoleId = user.RoleId,
-                    RoleName = user.RoleId == null ? null : (await _repoRole.GetByIdAsync((int)user.RoleId)).Name,
+                    RoleName = user.RoleId == null ? null : (await _repoRole.GetByIdAsync((int) user.RoleId)).Name,
                     RoleAssignDate = user.RoleAssignDate
                 });
             }
@@ -49,8 +50,8 @@ namespace TAI_Projekt.Controllers
             return Ok(dtoUsers);
         }
 
-        
-        [HttpGet("{id}")]
+
+        [HttpGet("{id}", Name = "GetUserById")]
         public async Task<ActionResult<DtoUser>> GetById(int id)
         {
             var user = await _repoUser.GetByIdAsync(id);
@@ -76,6 +77,14 @@ namespace TAI_Projekt.Controllers
         [HttpPost]
         public async Task<ActionResult> Add(DtoUser dtoUser)
         {
+
+            if (string.IsNullOrEmpty(dtoUser.Name)) return UnprocessableEntity("Invalid data");
+            if (string.IsNullOrEmpty(dtoUser.SecondName)) return UnprocessableEntity("Invalid data");
+            if (string.IsNullOrEmpty(dtoUser.Email)) return UnprocessableEntity("Invalid data");
+            if (string.IsNullOrEmpty(dtoUser.Phone)) return UnprocessableEntity("Invalid data");
+            if (dtoUser.Age == 0 || dtoUser.Age == null) return UnprocessableEntity("Invalid data");
+
+
             var user = new User
             {
                 Age = dtoUser.Age ?? default,
@@ -89,7 +98,7 @@ namespace TAI_Projekt.Controllers
             };
             
             await _repoUser.CreateAsync(user);
-            return Ok();
+            return CreatedAtRoute("GetUserById", new {user.Id}, user);
         }
 
         [HttpDelete("{id}")]

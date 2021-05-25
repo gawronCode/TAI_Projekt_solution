@@ -26,11 +26,19 @@ namespace TAI_Projekt
         {
 
             // pozwala na wykorzystywanie api przez angulara spod podanego adresu
+            // services.AddCors(options =>
+            // {
+            //     options.AddDefaultPolicy(builder =>
+            //     {
+            //         builder.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin();
+            //     });
+            // });
+
             services.AddCors(options =>
             {
                 options.AddDefaultPolicy(builder =>
                 {
-                    builder.WithOrigins("http://localhost:4200").AllowAnyMethod();
+                    builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
                 });
             });
 
@@ -51,6 +59,8 @@ namespace TAI_Projekt
                 app.UseDeveloperExceptionPage();
             }
 
+            //AddCors - dla komunikacji przegl¹darek z API
+            app.UseCors();
             app.UseHttpsRedirection();
             app.UseRouting();
 

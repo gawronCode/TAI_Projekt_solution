@@ -28,7 +28,7 @@ namespace TAI_Projekt.Controllers
         public async Task<ActionResult<IEnumerable<DtoUser>>> GetAll()
         {
             var users = await _repoUser.GetAllAsync();
-            if (users.Count == 0) return NotFound("No data in database");
+            if (users.Count == 0) return Ok(new List<DtoUser>());
 
             var dtoUsers = new List<DtoUser>();
             foreach (var user in users)

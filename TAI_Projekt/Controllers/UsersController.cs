@@ -116,11 +116,11 @@ namespace TAI_Projekt.Controllers
             var user = await _repoUser.GetByIdAsync(id);
             if (user == null) return NotFound("No data in database");
 
-            user.Name ??= dtoUser.Name;
-            user.SecondName ??= dtoUser.SecondName;
+            user.Name = dtoUser.Name;
+            user.SecondName = dtoUser.SecondName;
             user.Age = dtoUser.Age ?? user.Age;
-            user.Email ??= dtoUser.Email;
-            user.Phone ??= dtoUser.Phone;
+            user.Email = dtoUser.Email;
+            user.Phone = dtoUser.Phone;
 
             await _repoUser.UpdateAsync(user);
             return Ok();

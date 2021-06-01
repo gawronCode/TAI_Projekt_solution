@@ -15,10 +15,12 @@ namespace TAI_Projekt.Controllers
     {
 
         private readonly IRepoRole _repoRole;
+        private readonly IRepoUser _repoUser;
 
-        public RolesController(IRepoRole repoRole)
+        public RolesController(IRepoUser repoUser, IRepoRole repoRole)
         {
             _repoRole = repoRole;
+            _repoUser = repoUser;
         }
 
         [HttpGet]
@@ -64,6 +66,13 @@ namespace TAI_Projekt.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
+            var users = await _repoUser.GetAllByRoleIdAsync(id);
+            foreach (var user in users)
+            {
+                user.RoleId = null;
+                await _repoUser.UpdateAsync(user);
+            }
+
             var role = await _repoRole.GetByIdAsync(id);
             if (role == null) return NotFound("No data in database");
             await _repoRole.DeleteAsync(role);
@@ -75,8 +84,8 @@ namespace TAI_Projekt.Controllers
         {
             var roleToUpdate = await _repoRole.GetByIdAsync(id);
             if (roleToUpdate == null) return NotFound("No data in database");
-            roleToUpdate.Name ??= dtoRole.Name;
-            roleToUpdate.Description ??= dtoRole.Description;
+            roleToUpdate.Name = dtoRole.Name;
+            roleToUpdate.Description = dtoRole.Description;
             await _repoRole.UpdateAsync(roleToUpdate);
             return NoContent();
         }

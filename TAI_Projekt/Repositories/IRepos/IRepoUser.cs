@@ -8,5 +8,6 @@ namespace TAI_Projekt.Repositories.IRepos
 {
     public interface IRepoUser : IRepoGeneral<User>
     {
+        public Task<ICollection<User>> GetAllByRoleIdAsync(int roleId);
     }
 }

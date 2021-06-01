@@ -43,6 +43,12 @@ namespace TAI_Projekt.Repositories.Repos
             return user;
         }
 
+        public async Task<ICollection<User>> GetAllByRoleIdAsync(int roleId)
+        {
+            var users = await _context.Users.Where(q => q.RoleId == roleId).ToListAsync();
+            return users;
+        }
+
         public async Task<bool> SaveAsync()
         {
             var changes = await _context.SaveChangesAsync();
